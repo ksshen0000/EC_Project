@@ -110,6 +110,24 @@ def callback_B(ga_instance):
         zeros = np.zeros(row*col, dtype = np.uint8)
         cv2.imwrite('./B_sol/B_solution_'+str(ga_instance.generations_completed)+'.png', merge_RGBThreeChannel(zeros, zeros, ga_instance.best_solution()[0], row, col))
 
+def crossover_single_arithmetic(parents, offspring_size, ga_instance):
+    offspring = []
+    idx = 0
+    alpha = 0.8
+    # alpha = np.random.uniform(0.2, 0.8, 1)
+    while len(offspring) != offspring_size[0]:
+        parent1 = parents[idx % parents.shape[0], :].copy()
+        parent2 = parents[(idx + 1) % parents.shape[0], :].copy()
+
+        child = parent1*alpha + parent2*(1-alpha)
+        # print(parent1)
+        # print(parent2)
+        # print(child)
+        offspring.append(child)
+
+        idx += 1
+
+    return np.array(offspring)
 
 if __name__=='__main__':
     image = cv2.imread("ea_test.png")
@@ -127,7 +145,8 @@ if __name__=='__main__':
                        mutation_by_replacement=True,
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
-                       on_generation=callback_R)
+                       on_generation=callback_R,
+                       crossover_type=crossover_single_arithmetic)
 
     ga_instance_g = pygad.GA(num_generations=20000,
                        num_parents_mating=10,
@@ -141,7 +160,8 @@ if __name__=='__main__':
                        mutation_by_replacement=True,
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
-                       on_generation=callback_G)
+                       on_generation=callback_G,
+                       crossover_type=crossover_single_arithmetic)
 
     ga_instance_b = pygad.GA(num_generations=20000,
                        num_parents_mating=10,
@@ -155,7 +175,8 @@ if __name__=='__main__':
                        mutation_by_replacement=True,
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
-                       on_generation=callback_B)
+                       on_generation=callback_B,
+                       crossover_type=crossover_single_arithmetic)
     
     ga_instance_r.run()
     ga_instance_b.run()
