@@ -122,7 +122,7 @@ def callback_B(ga_instance):
         zeros = np.zeros(row*col, dtype = np.uint8)
         cv2.imwrite('./B_sol/B_solution_'+str(ga_instance.generations_completed)+'.png', merge_RGBThreeChannel(zeros, zeros, ga_instance.best_solution()[0], row, col))
 
-def crossover_linear(parents, offspring_size, ga_instance):
+def crossover_linear_r(parents, offspring_size, ga_instance):
     offspring = []
     idx = 0
     # alpha = np.random.uniform(0.2, 0.8, 1)
@@ -138,7 +138,58 @@ def crossover_linear(parents, offspring_size, ga_instance):
         arena.append(-0.5*parent1+1.5*parent2)
         maxi=0
         for i in range (0,5):
-            fitness_arena.append(fitness_R(arena[i],i)+fitness_B(arena[i],i)+fitness_G(arena[i],i))
+            fitness_arena.append(fitness_R(arena[i],i))
+            if ( fitness_arena[maxi] <fitness_arena[i]):
+                maxi = i
+        offspring.append(arena[maxi])
+
+        idx += 1
+
+    return np.array(offspring)
+
+def crossover_linear_g(parents, offspring_size, ga_instance):
+    offspring = []
+    idx = 0
+    # alpha = np.random.uniform(0.2, 0.8, 1)
+    while len(offspring) != offspring_size[0]:
+        parent1 = np.array( parents[idx % parents.shape[0], :].copy())
+        parent2 = np.array(parents[(idx + 1) % parents.shape[0], :].copy())
+        arena=[]
+        fitness_arena=[]
+        arena.append(parent1)
+        arena.append(parent2)
+        arena.append(0.5*parent1+0.5*parent2)
+        arena.append(1.5*parent1-0.5*parent2)
+        arena.append(-0.5*parent1+1.5*parent2)
+        maxi=0
+        for i in range (0,5):
+            fitness_arena.append(fitness_G(arena[i],i))
+            if ( fitness_arena[maxi] <fitness_arena[i]):
+                maxi = i
+        offspring.append(arena[maxi])
+
+        idx += 1
+
+    return np.array(offspring)
+
+
+def crossover_linear_b(parents, offspring_size, ga_instance):
+    offspring = []
+    idx = 0
+    # alpha = np.random.uniform(0.2, 0.8, 1)
+    while len(offspring) != offspring_size[0]:
+        parent1 = np.array( parents[idx % parents.shape[0], :].copy())
+        parent2 = np.array(parents[(idx + 1) % parents.shape[0], :].copy())
+        arena=[]
+        fitness_arena=[]
+        arena.append(parent1)
+        arena.append(parent2)
+        arena.append(0.5*parent1+0.5*parent2)
+        arena.append(1.5*parent1-0.5*parent2)
+        arena.append(-0.5*parent1+1.5*parent2)
+        maxi=0
+        for i in range (0,5):
+            fitness_arena.append(fitness_B(arena[i],i))
             if ( fitness_arena[maxi] <fitness_arena[i]):
                 maxi = i
         offspring.append(arena[maxi])
@@ -164,7 +215,7 @@ if __name__=='__main__':
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_R,
-                       crossover_type=crossover_linear)
+                       crossover_type=crossover_linear_r)
 
     ga_instance_g = pygad.GA(num_generations=20000,
                        num_parents_mating=10,
@@ -179,7 +230,7 @@ if __name__=='__main__':
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_G,
-                       crossover_type=crossover_linear)
+                       crossover_type=crossover_linear_g)
 
     ga_instance_b = pygad.GA(num_generations=20000,
                        num_parents_mating=10,
@@ -194,7 +245,7 @@ if __name__=='__main__':
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_B,
-                       crossover_type=crossover_linear)
+                       crossover_type=crossover_linear_b)
     
     
     
