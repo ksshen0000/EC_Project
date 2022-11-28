@@ -114,14 +114,15 @@ def callback_B(ga_instance):
 
 def crossover_blend(parents, offspring_size, ga_instance):
     offspring = []
-    alpha = 0.5
+    alpha = 0.2
     idx=0
     while len(offspring) != offspring_size[0]:
         parent1 = np.array(parents[idx % parents.shape[0], :].copy())
         parent2 = np.array(parents[(idx + 1) % parents.shape[0], :].copy())
         child_lb = parent1 - alpha*(parent2-parent1)
         child_up = parent2 + alpha*(parent2-parent1)
-        child = np.random.uniform(low=child_lb,high=child_up)
+        
+        child = np.random.uniform(child_lb,child_up)
         offspring.append(child)
         idx+=1
 
