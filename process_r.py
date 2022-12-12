@@ -3,7 +3,7 @@ import pygad
 import cv2
 row = 100
 col = 100
-alpha = 0.8
+alpha = 0.2
 
 def split_RGBThreeChannel(img):
     img = img / 255.0
@@ -58,6 +58,52 @@ def crossover_single_arithmetic(parents, offspring_size, ga_instance):
 
     return np.array(offspring)
 
+def crossover_blend(parents, offspring_size, ga_instance):
+    offspring = []
+    idx=0
+    while len(offspring) != offspring_size[0]:
+        parent1 = np.array(parents[idx % parents.shape[0], :].copy())
+        parent2 = np.array(parents[(idx + 1) % parents.shape[0], :].copy())
+        child_lb = parent1 - alpha*(parent2-parent1)
+        child_up = parent2 + alpha*(parent2-parent1)
+        
+        child = np.random.uniform(child_lb,child_up)
+        child[child>1.0] = 1.0
+        child[child<0.0] = 0.0
+        offspring.append(child)
+        idx+=1
+
+    return np.array(offspring)
+
+def crossover_linear_r(parents, offspring_size, ga_instance):
+    offspring = []
+    idx = 0
+    # alpha = np.random.uniform(0.2, 0.8, 1)
+    while len(offspring) != offspring_size[0]:
+        parent1 = np.array( parents[idx % parents.shape[0], :].copy())
+        parent2 = np.array(parents[(idx + 1) % parents.shape[0], :].copy())
+        arena=[]
+        fitness_arena=[]
+        arena.append(0.5*parent1+0.5*parent2)
+        sol_temp = 1.5*parent1-0.5*parent2
+        sol_temp[sol_temp>1.0] = 1.0
+        sol_temp[sol_temp<0.0] = 0.0
+        arena.append(sol_temp)
+        sol_temp_2 = -0.5*parent1+1.5*parent2
+        sol_temp_2[sol_temp_2>1.0] = 1.0
+        sol_temp_2[sol_temp_2<0.0] = 0.0
+        arena.append(sol_temp_2)
+        maxi=0
+        for i in range (0,3):
+            fitness_arena.append(fitness_R(arena[i],i))
+            if ( fitness_arena[maxi] <fitness_arena[i]):
+                maxi = i
+        offspring.append(arena[maxi])
+
+        idx += 1
+
+    return np.array(offspring)
+
 def process_ga_r():
 
     image = cv2.imread("ea_test.png")
@@ -76,11 +122,11 @@ def process_ga_r():
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_R,
-                       crossover_type=crossover_single_arithmetic)
+                       crossover_type=crossover_blend)
     ga_instance_r.run()
     ga_instance_r.save(filename="ga_instance_r")
     (solution_r, solution_fitness_r, solution_idx_r) = ga_instance_r.best_solution()
-    # print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness_r))
+    print("R : Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness_r))
     # print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx_r))
     with open('r.npy', "wb") as f:
         np.save(f, solution_r)
