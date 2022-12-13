@@ -3,7 +3,7 @@ import pygad
 import cv2
 row = 100
 col = 100
-alpha = 0.2
+alpha = 0.5
 
 def split_RGBThreeChannel(img):
     img = img / 255.0
