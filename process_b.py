@@ -68,8 +68,7 @@ def crossover_blend(parents, offspring_size, ga_instance):
         child_up = parent2 + alpha*(parent2-parent1)
         
         child = np.random.uniform(child_lb,child_up)
-        child[child>1.0] = 1.0
-        child[child<0.0] = 0.0
+        child.clip(0,1)
         offspring.append(child)
         idx+=1
 
@@ -123,7 +122,8 @@ def process_ga_b():
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_B,
-                       crossover_type=crossover_blend)
+                       crossover_type=crossover_blend,
+                       parent_selection_type="tournament")
     ga_instance_b.run()
     ga_instance_b.save(filename="ga_instance_b")
     (solution_b, solution_fitness_b, solution_idx_b) = ga_instance_b.best_solution()
