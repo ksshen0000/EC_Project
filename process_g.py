@@ -3,7 +3,7 @@ import pygad
 import cv2
 row = 100
 col = 100
-alpha = 0.2
+alpha = 0.8
 
 def split_RGBThreeChannel(img):
     img = img / 255.0
@@ -121,7 +121,7 @@ def process_ga_g():
                        random_mutation_min_val=0.0,
                        random_mutation_max_val=1.0,
                        on_generation=callback_G,
-                       crossover_type=crossover_blend,
+                       crossover_type=crossover_single_arithmetic,
                        parent_selection_type="tournament")
     ga_instance_g.run()
     ga_instance_g.save(filename="ga_instance_g")
