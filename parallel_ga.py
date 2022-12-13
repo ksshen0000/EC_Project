@@ -52,8 +52,9 @@ if __name__=='__main__':
     ga_instance_g = pygad.load(filename="ga_instance_g")
     ga_instance_b = pygad.load(filename="ga_instance_b")
     
-    # ga_instance_r.plot_fitness()
-    # ga_instance_g.plot_fitness()
+    ga_instance_r.plot_fitness()
+    ga_instance_g.plot_fitness()
+    ga_instance_b.plot_fitness()
     with open('r.npy', 'rb') as f:
         solution_r = np.load(f)
     with open('g.npy', 'rb') as f:
