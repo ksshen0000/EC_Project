@@ -117,8 +117,9 @@ if __name__=='__main__':
     (r_channel, g_channel, b_channel) = split_RGBThreeChannel(image)
 
     ga_instance_r = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_R,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,
@@ -131,8 +132,9 @@ if __name__=='__main__':
                        on_generation=callback_R)
 
     ga_instance_g = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_G,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,
@@ -145,8 +147,9 @@ if __name__=='__main__':
                        on_generation=callback_G)
 
     ga_instance_b = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_B,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,

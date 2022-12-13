@@ -124,9 +124,11 @@ def callback_B(ga_instance):
 
 def crossover_single_arithmetic(parents, offspring_size, ga_instance):
     offspring = []
+    # print(len(parents))
     idx = 0
-    alpha = 0.8
+    alpha = 0.5
     # alpha = np.random.uniform(0.2, 0.8, 1)
+    # print(offspring_size[0])
     while len(offspring) != offspring_size[0]:
         parent1 = parents[idx % parents.shape[0], :].copy()
         parent2 = parents[(idx + 1) % parents.shape[0], :].copy()
@@ -146,8 +148,9 @@ if __name__=='__main__':
     (r_channel, g_channel, b_channel) = split_RGBThreeChannel(image)
 
     ga_instance_r = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_R,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,
@@ -161,8 +164,9 @@ if __name__=='__main__':
                        crossover_type=crossover_single_arithmetic)
 
     ga_instance_g = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_G,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,
@@ -176,8 +180,9 @@ if __name__=='__main__':
                        crossover_type=crossover_single_arithmetic)
 
     ga_instance_b = pygad.GA(num_generations=20000,
-                       num_parents_mating=10,
+                       num_parents_mating=20,
                        fitness_func=fitness_B,
+                       parent_selection_type="tournament",
                        sol_per_pop=20,
                        num_genes=row*col,
                        init_range_low=0.0,
